@@ -24,28 +24,26 @@ func Encrypt(publicKey rsa.PublicKey, msg []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-  aesKey := createSymetricKey(sourceBytes)
+	aesKey := createSymetricKey(sourceBytes)
 
-  encMsg, err := symmetricEncrypt(msg, aesKey[:])
-  if err != nil {
-    return nil , err
-  }
+	encMsg, err := symmetricEncrypt(msg, aesKey[:])
+	if err != nil {
+		return nil, err
+	}
 
-  encSrcBytes := publicEncrypt(publicKey, sourceBytes)
-  return append(encSrcBytes, encMsg...), nil
+	encSrcBytes := publicEncrypt(publicKey, sourceBytes)
+	return append(encSrcBytes, encMsg...), nil
 }
-
 
 // Decrypt decrypts a message using an RSA private key and returns the plaintext bytes
 // The encrypted message should be formatted as follows:
 // [encrypted bytes of length == privateKey.Size()][initialization vector][encrypted message][authroization tag]
 func Decrypt(privateKey *rsa.PrivateKey, msg []byte) ([]byte, error) {
-  keyLength := privateKey.Size()
-  encryptedKey, encryptedMessage := msg[:keyLength], msg[keyLength:]
-  key := createSymetricKey(privateDecypt(privateKey, encryptedKey))
-  return symmetricDecrypt(encryptedMessage, key[:])
+	keyLength := privateKey.Size()
+	encryptedKey, encryptedMessage := msg[:keyLength], msg[keyLength:]
+	key := createSymetricKey(privateDecypt(privateKey, encryptedKey))
+	return symmetricDecrypt(encryptedMessage, key[:])
 }
-
 
 func privateDecypt(pk *rsa.PrivateKey, cipherText []byte) []byte {
 	c := new(big.Int).SetBytes(cipherText)
@@ -63,7 +61,7 @@ func publicEncrypt(pub rsa.PublicKey, data []byte) []byte {
 }
 
 func symmetricEncrypt(plaintext []byte, key []byte) ([]byte, error) {
-  log.Println(len(key))
+	log.Println(len(key))
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err

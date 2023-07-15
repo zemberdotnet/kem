@@ -10,9 +10,9 @@ import (
 func TestPublicPrivateEncryptDecrypt(t *testing.T) {
 	privateKey, _ := rsa.GenerateKey(rand.Reader, 512) // 512 bits just for testing, using values too large will cause errors due to insufficient randomness
 	b, err := genRandBytes(privateKey.Size())
-  if err != nil {
-    t.Error(err)
-  }
+	if err != nil {
+		t.Error(err)
+	}
 	enc := publicEncrypt(privateKey.PublicKey, b)
 	if bytes.Compare(b, enc) == 0 {
 		t.Error("enc and b are equal when they should be differnt")
@@ -40,18 +40,18 @@ func TestSymetricEncrypt(t *testing.T) {
 func TestEncryptDecrypt(t *testing.T) {
 	privateKey, _ := rsa.GenerateKey(rand.Reader, 512)
 
-  mySecretMessage := []byte("secret!")
-  enc, err := Encrypt(privateKey.PublicKey, []byte(mySecretMessage))
-  if err != nil {
-    t.Error(err)
-  }
+	mySecretMessage := []byte("secret!")
+	enc, err := Encrypt(privateKey.PublicKey, []byte(mySecretMessage))
+	if err != nil {
+		t.Error(err)
+	}
 
-  dec, err := Decrypt(privateKey, enc)
-  if err != nil {
-    t.Error(err)
-  }
+	dec, err := Decrypt(privateKey, enc)
+	if err != nil {
+		t.Error(err)
+	}
 
-  if bytes.Compare(dec, mySecretMessage) != 0 {
-    t.Error("decryption did not produce the same input text")
-  }
+	if bytes.Compare(dec, mySecretMessage) != 0 {
+		t.Error("decryption did not produce the same input text")
+	}
 }
